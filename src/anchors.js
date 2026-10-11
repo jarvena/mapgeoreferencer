@@ -57,7 +57,23 @@ export class Anchors {
             .addTo(this.map);
         const anchor = {pixel, target, marker};
 
+        // Tapping an anchor (touch, without dragging it) deletes it.
+        let tap = null;
+        el.addEventListener('touchstart', (e) => {
+            const t = e.touches[0];
+            tap = e.touches.length === 1 ? {x: t.clientX, y: t.clientY} : null;
+        }, {passive: true});
+        el.addEventListener('touchend', (e) => {
+            const t = e.changedTouches[0];
+            if (tap && Math.hypot(t.clientX - tap.x, t.clientY - tap.y) < 10) {
+                e.preventDefault(); // no emulated mouse events / click
+                this.remove(anchor);
+            }
+            tap = null;
+        });
+
         marker.on('dragstart', () => {
+            tap = null;
             this.select(anchor);
             this.onDrag(true);
         });
