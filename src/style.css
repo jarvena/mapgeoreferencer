@@ -1,0 +1,79 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font: 14px/1.4 system-ui, 'Segoe UI', Roboto, sans-serif;
+}
+
+#map {
+  position: absolute;
+  inset: 0;
+}
+
+body.dragging #map::after {
+  content: 'Drop image';
+  position: absolute;
+  inset: 12px;
+  display: grid;
+  place-items: center;
+  border: 3px dashed #2563eb;
+  border-radius: 8px;
+  background: rgba(37, 99, 235, 0.12);
+  color: #1e3a8a;
+  font-size: 24px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.panel {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  max-width: 260px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  color: #222;
+}
+
+.panel p {
+  margin: 0 0 8px;
+}
+
+.panel .controls p {
+  margin: 8px 0;
+}
+
+.panel label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.panel input[type='range'] {
+  flex: 1;
+}
+
+.panel .buttons {
+  display: flex;
+  gap: 6px;
+}
+
+.anchor-marker {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  background: #dc2626;
+  color: #fff;
+  font: bold 11px/20px system-ui, sans-serif;
+  text-align: center;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.6);
+  cursor: move;
+}
+
+.anchor-marker.selected {
+  background: #2563eb;
+}
