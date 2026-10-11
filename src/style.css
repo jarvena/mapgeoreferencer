@@ -38,10 +38,27 @@ body.dragging #map::after {
   color: #222;
 }
 
-.panel .open {
-  display: block;
-  width: 100%;
+.panel .header {
+  display: flex;
+  gap: 6px;
+}
+
+.panel.collapsed .body {
+  display: none;
+}
+
+.panel:not(.collapsed) .header {
   margin-bottom: 8px;
+}
+
+.panel .collapse {
+  padding: 6px 10px;
+  font: inherit;
+  cursor: pointer;
+}
+
+.panel .open {
+  flex: 1;
   padding: 6px 10px;
   font: inherit;
   cursor: pointer;
