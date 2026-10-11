@@ -4,7 +4,7 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url';
 import {ImageLayer} from './imageLayer.js';
 import {Anchors} from './anchors.js';
-import {setupDrop, initialPlacement} from './dropImage.js';
+import {setupDrop, loadImageFile, initialPlacement} from './dropImage.js';
 import {createPanel} from './ui.js';
 import {exportGeoreferenced} from './exportImage.js';
 
@@ -66,13 +66,16 @@ map.on('load', () => {
         },
         onClear: () => anchors.clear(),
         onExport: () => exportGeoreferenced(file, layer.image.source, anchors),
+        onOpenFiles: (files) => loadImageFile(files, onImage),
     });
 
     let file = null;
 
-    setupDrop(document.body, async (bitmap, droppedFile) => {
-        file = droppedFile;
+    async function onImage(bitmap, imageFile) {
+        file = imageFile;
         await layer.setImage(bitmap);
         anchors.reset(initialPlacement(map, bitmap.width, bitmap.height));
-    });
+    }
+
+    setupDrop(document.body, onImage);
 });

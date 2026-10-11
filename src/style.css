@@ -38,6 +38,15 @@ body.dragging #map::after {
   color: #222;
 }
 
+.panel .open {
+  display: block;
+  width: 100%;
+  margin-bottom: 8px;
+  padding: 6px 10px;
+  font: inherit;
+  cursor: pointer;
+}
+
 .panel p {
   margin: 0 0 8px;
 }
