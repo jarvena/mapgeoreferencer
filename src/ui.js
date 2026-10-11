@@ -6,11 +6,13 @@ const MODE_LABELS = {
     tps: 'thin plate spline',
 };
 
-export function createPanel(container, {opacity, onOpacity, onClear, onExport}) {
+export function createPanel(container, {opacity, onOpacity, onClear, onExport, onOpenFiles}) {
     const panel = document.createElement('div');
     panel.className = 'panel';
     panel.innerHTML = `
-        <p class="hint">Drop a map image onto the page</p>
+        <button type="button" class="open" title="Or drop an image file onto the page">Open map image…</button>
+        <input type="file" class="file" accept="image/*" hidden>
+        <p class="hint" hidden></p>
         <div class="controls" hidden>
             <label title="Image opacity while not dragging">Opacity <input type="range" class="static" min="0" max="1" step="0.01" value="${opacity.static}"></label>
             <label title="Image opacity while dragging an anchor">Dragging <input type="range" class="dynamic" min="0" max="1" step="0.01" value="${opacity.dynamic}"></label>
@@ -27,6 +29,13 @@ export function createPanel(container, {opacity, onOpacity, onClear, onExport}) 
     const status = panel.querySelector('.status');
     const clear = panel.querySelector('.clear');
     const exportButton = panel.querySelector('.export');
+    const openButton = panel.querySelector('.open');
+    const fileInput = panel.querySelector('.file');
+    openButton.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', () => {
+        onOpenFiles(fileInput.files);
+        fileInput.value = '';
+    });
     for (const state of ['static', 'dynamic']) {
         panel.querySelector(`input.${state}`).addEventListener('input', (e) => onOpacity(state, Number(e.target.value)));
     }
@@ -48,6 +57,8 @@ export function createPanel(container, {opacity, onOpacity, onClear, onExport}) 
     return {
         update(anchors) {
             controls.hidden = false;
+            hint.hidden = false;
+            openButton.textContent = 'Open another image…';
             hint.textContent = 'Drag on the image to add anchors · Space+drag to pan · right-click an anchor to delete';
             const n = anchors.anchors.length;
             status.textContent = `${n} anchor${n === 1 ? '' : 's'} · ${MODE_LABELS[anchors.mode] ?? anchors.mode}`;

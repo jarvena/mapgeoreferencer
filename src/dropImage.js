@@ -23,14 +23,19 @@ export function setupDrop(target, onImage) {
         e.preventDefault();
         depth = 0;
         highlight(false);
-        const file = [...e.dataTransfer.files].find(f => f.type.startsWith('image/'));
-        if (!file) return;
-        try {
-            onImage(await createImageBitmap(file, {imageOrientation: 'from-image'}), file);
-        } catch (err) {
-            console.error(`Could not decode ${file.name}`, err);
-        }
+        await loadImageFile([...e.dataTransfer.files], onImage);
     });
+}
+
+/** Decodes the first image file in files and calls onImage(bitmap, file). */
+export async function loadImageFile(files, onImage) {
+    const file = [...files].find(f => f.type.startsWith('image/'));
+    if (!file) return;
+    try {
+        onImage(await createImageBitmap(file, {imageOrientation: 'from-image'}), file);
+    } catch (err) {
+        console.error(`Could not decode ${file.name}`, err);
+    }
 }
 
 /** North-up similarity fitting a width × height image into 80% of the current view. */
